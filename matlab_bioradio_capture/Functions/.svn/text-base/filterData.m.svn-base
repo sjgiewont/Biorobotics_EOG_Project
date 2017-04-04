@@ -1,0 +1,24 @@
+%   FileName: filterData.m
+%   Description:    Filter data for the specified channels
+%
+%   Date:           04/08/09
+%   Author:         Ryan M. Bowen
+%
+%   Input:          channelData - all the channel data
+%                   channelNumbers - the channels to filter 1:N array of
+%                   indexes.
+%
+%   Output:         filteredData - all the data with specified channels being filtered.         
+
+function filteredData = filterData(channelData, channelNumbers)
+
+% Copy the Data
+filteredData = channelData;
+
+% Sampling Frequency
+Fs = 960;
+
+% Get Coefficients of the Filter
+
+
+% Filter the specified channels

@@ -1,0 +1,12 @@
+function executeCommand(fftWindow,leftThreshold,rightThreshold)
+
+channel1 = fftWindow(1,:);
+channel2 = fftWindow(2,:);
+
+if( (mean(channel1) > leftThreshold) && (mean(channel2 >rightThreshold))  )
+    display('FORWARD');
+elseif (mean(channel1) > leftThreshold)
+    display('LEFT'); 
+elseif (mean(channel2) > rightThreshold)
+    display('RIGHT'); 
+end
