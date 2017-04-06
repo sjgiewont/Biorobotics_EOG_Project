@@ -64,10 +64,51 @@ circYpos = yCenter;
 
 logged_data_total = [];
 
+
+%------------------------------------------------------------
+% We set the text size to be nice and big here
+Screen('TextSize', window, 300);
+
+nominalFrameRate = Screen('NominalFrameRate', window);
+
+presSecs = [sort(repmat(1:5, 1, nominalFrameRate), 'descend') 0];
+
+% We change the color of the number every "nominalFrameRate" frames
+colorChangeCounter = 0;
+
+% Randomise a start color
+color = rand(1, 3);
+
+% Here is our drawing loop
+for i = 1:length(presSecs)
+
+    % Convert our current number to display into a string
+    numberString = num2str(presSecs(i));
+
+    % Draw our number to the screen
+    DrawFormattedText(window, numberString, 'center', 'center', color);
+
+    % Flip to the screen
+    Screen('Flip', window);
+
+    % Decide if to change the color on the next frame
+    colorChangeCounter = colorChangeCounter + 1;
+    if colorChangeCounter == nominalFrameRate
+        color = rand(1, 3);
+        colorChangeCounter = 0;
+    end
+
+end
+
+%------------------------------------------------------------
+
 % draw circle at origin
 my_circle(window, colCircle, circXpos, yCenter, 20);
 vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
 isCollecting = 1;
+
+
+
 WaitSecs(2);
 
 % Loop the animation until a key is pressed
