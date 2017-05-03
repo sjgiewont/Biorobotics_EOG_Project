@@ -5,7 +5,11 @@ load charles_eog_1.mat
 vertical_channel = logged_data_total(:,3);
 horizontal_channel = logged_data_total(:,4);
 
+max_horizontal = max(logged_data_total(:,1))
+
+
 output_pos = []
+
 
 for i = 1:size(logged_data_total,1)
     if(logged_data_total(i,2) == 525 && logged_data_total(i,1) == 840)
@@ -19,6 +23,22 @@ end
 
 output_pos = transpose(output_pos);
 plot(output_pos)
+
+num_windows = size(logged_data_total,1) / 96
+
+sampled_window_mean = [];
+start_window = 1;
+end_window = 95;
+
+for i = 1:num_windows
+    sampled_window = logged_data_total(start_window:end_window, 3:4);
+    start_window = end_window + 1;
+    end_window = start_window + 95;
+    sampled_window_mean = [sampled_window_mean; mean(sampled_window)];
+end
+
+plot(sampled_window_mean)
+plot(sampled_window_mean(:,1), sampled_window_mean(:,2))
 
 figure(2)
 plot3(vertical_channel, horizontal_channel, output_pos)
@@ -38,13 +58,4 @@ scatter3(training_normalized(:,1), training_normalized(:,2), training_normalized
 
 training_normalized_input = training_normalized(:,1:2);
 
-
-trnOpt = [50, 0, 0.1, 0.9, 1.1];
-[fis,trainError] = anfis(training_normalized, 10, trnOpt)
-
-fisRMSE = min(trainError)
-
-vertical_eye = 0.0316782973467039;
-horizontal_eye = -0.0298764132373096;
-evalfis([vertical_eye,horizontal_eye],fis)
 
