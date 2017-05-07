@@ -5,8 +5,8 @@
 
 % Clear the workspace and the screen
 sca;        % clear all screens/screen objects
-close all;
-clearvars;
+% close all;
+% clearvars;
 
 load('anfis_data.mat');
 
