@@ -85,7 +85,7 @@ figure(9)
 scatter(vertical_training_total(:,1), vertical_training_total(:,2))
 
 % run anfis
-trnOpt = [40, 0, 0.1, 0.9, 1.1];
+trnOpt = [1000, 0, 0.1, 0.9, 1.1];
 [fis_horizontal,trainError_horizontal] = anfis(horizontal_training_total, 10, trnOpt)
 [fis_vertical,trainError_vertical] = anfis(vertical_training_total, 10, trnOpt)
 
@@ -105,4 +105,6 @@ plot(horizontal_training(:,1),horizontal_training(:,2),horizontal_training(:,1),
 
 figure(7)
 plot(vertical_training(:,1),vertical_training(:,2),vertical_training(:,1),evalfis(vertical_training(:,1),fis_vertical))
+
+save('anfis_data.mat', 'fis_horizontal', 'fis_vertical');
 
