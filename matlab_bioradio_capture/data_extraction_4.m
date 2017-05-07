@@ -49,14 +49,13 @@ for file_num = 1:eog_file_total_num
         start_window = end_window + 1;
         end_window = start_window + 95;
         
-        scaled_window = sampled_window(:,2) - first_vertical;
+        scaled_window = sampled_window(:,2) - first_horizontal;
         scaled_window = [sampled_window(:,1), scaled_window];
-        horizontal_sampled_mean = [horizontal_sampled_mean; mean(scaled_window)];
+        horizontal_sampled_mean = [horizontal_sampled_mean; downsample(scaled_window,10)];
     end
 
     figure(4)
     scatter(horizontal_sampled_mean(:,1), horizontal_sampled_mean(:,2)) 
-
 
     % vertical data extraction
     num_windows_vertical = size(training_data_vertical,1) / 96;
@@ -70,8 +69,9 @@ for file_num = 1:eog_file_total_num
         start_window = end_window + 1;
         end_window = start_window + 95;
         
-        
-        vertical_sampled_mean = [vertical_sampled_mean; mean(sampled_window)];
+        scaled_window = sampled_window(:,2) - first_vertical;
+        scaled_window = [sampled_window(:,1), scaled_window];
+        vertical_sampled_mean = [vertical_sampled_mean; downsample(scaled_window, 10)];
     end
 
     figure(5)
@@ -94,7 +94,7 @@ figure(9)
 scatter(vertical_training_total(:,1), vertical_training_total(:,2))
 
 % run anfis
-trnOpt = [1000, 0, 0.1, 0.9, 1.1];
+trnOpt = [20, 0, 0.1, 0.9, 1.1];
 [fis_horizontal,trainError_horizontal] = anfis(horizontal_training_total, 10, trnOpt)
 [fis_vertical,trainError_vertical] = anfis(vertical_training_total, 10, trnOpt)
 
