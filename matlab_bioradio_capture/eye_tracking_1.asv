@@ -97,13 +97,15 @@ while ~KbCheck
         predicted_vertical = evalfis([sampled_vertical_mean],fis_vertical)
         predicted_horizontal = evalfis([sampled_horizontal_mean],fis_horizontal)
        
-         if predicted_vertical > screenYpixels
-            predicted_vertical = screenYpixels;
+         if predicted_horizontal > screenXpixels
+            predicted_horizontal = screenXpixels;
         end
         
         if predicted_horizontal > screenXpixels
             predicted_horizontal = screenXpixels;
-        end        
+        end
+        
+        
         
         my_circle(window, colCircle, predicted_horizontal, predicted_vertical, 20);
         % Flip to the screen
