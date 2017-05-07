@@ -92,8 +92,8 @@ while ~KbCheck
         predicted_vertical = evalfis([sampled_vertical_mean],fis_vertical)
         predicted_horizontal = evalfis([sampled_horizontal_mean],fis_horizontal)
        
-        new_ball_vertical = yCenter + predicted_vertical;
-        new_ball_horizontal = xCenter + predicted_horizontal;
+        new_ball_vertical = predicted_vertical;
+        new_ball_horizontal = predicted_horizontal;
         
        
         if new_ball_vertical > screenYpixels
