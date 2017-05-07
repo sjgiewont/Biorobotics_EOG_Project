@@ -70,11 +70,14 @@ try
 start(t);
 i=0;
 isCollecting = 1;
-while(i<100)
-    i=i+1;
-    pause(0.1);
+% while(i<100)
+%     i=i+1;
+%     pause(0.1);
+% end
+while(1)
 end
- display('Stopped Code');
+
+display('Stopped Code');
  stop(t);
  delete(t);
 catch err
