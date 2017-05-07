@@ -61,11 +61,9 @@ calibration_check = 0;
 running_horizontal_mean = [];
 running_vertical_mean = [];
 
-while calibration_check < 10
-    sampled_data = rawWindow;
-        
-    sampled_vertical = sampled_data(:,1);
-    sampled_horizontal = sampled_data(:,2);
+while calibration_check < 10        
+    sampled_vertical = rawWindow(:,1);
+    sampled_horizontal = rawWindow(:,2);
 
     sampled_vertical_mean = mean(sampled_vertical);
     sampled_horizontal_mean = mean(sampled_horizontal);
@@ -84,12 +82,9 @@ horizontal_base_meas = mean(running_horizontal_mean);
 colCircle = [1 0 0]; 
 
 % Loop the animation until a key is pressed
-while ~KbCheck
-    
-        sampled_data = rawWindow;
-        
-        sampled_vertical = sampled_data(:,1);
-        sampled_horizontal = sampled_data(:,2);
+while ~KbCheck        
+        sampled_vertical = rawWindow(:,1);
+        sampled_horizontal = rawWindow(:,2);
         
         sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical);
         sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal);
@@ -100,7 +95,7 @@ while ~KbCheck
         new_ball_vertical = yCenter + predicted_vertical;
         new_ball_horizontal = xCenter + predicted_horizontal;
         
-        
+       
         if new_ball_vertical > screenYpixels
             new_ball_vertical = screenYpixels;
         elseif new_ball_vertical < 0
