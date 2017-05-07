@@ -5,8 +5,8 @@
 
 % Clear the workspace and the screen
 sca;        % clear all screens/screen objects
-close all;
-clearvars;
+% close all;
+% clearvars;
 
 load('anfis_data.mat');
 
@@ -97,15 +97,18 @@ while ~KbCheck
         predicted_vertical = evalfis([sampled_vertical_mean],fis_vertical)
         predicted_horizontal = evalfis([sampled_horizontal_mean],fis_horizontal)
        
-         if predicted_horizontal > screenXpixels
-            predicted_horizontal = screenXpixels;
+        new_ball_vertical = yCenter + predicted_vertical;
+        new_ball_horizontal = xCenter + predicted_horizontal;
+        
+        
+        
+        if predicted_vertical > screenYpixels
+            predicted_vertical = screenYpixels;
         end
         
         if predicted_horizontal > screenXpixels
             predicted_horizontal = screenXpixels;
-        end
-        
-        
+        end        
         
         my_circle(window, colCircle, predicted_horizontal, predicted_vertical, 20);
         % Flip to the screen
