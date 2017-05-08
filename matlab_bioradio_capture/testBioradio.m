@@ -25,7 +25,7 @@ isCollecting =0;
 % Variable regarding Data Collection System
 repeat_trials=2; % trials of visual stimulus to be repeated
 numDevices=1; % num of Bio-radio s 150 Connected, and collecting EEG
-samplingRate =960;
+samplingRate =960;  
 collectionInterval =samplingRate * .1; % Raw Data buffer size collectionInterval = sampleingRate * timeTo buffer in seconds
 channelNumbers = [1 2]; % Number of Channels Used
 rawWindow = zeros( length(channelNumbers),collectionInterval); % Raw Data Buffer Allocation

@@ -8,7 +8,7 @@ sca;        % clear all screens/screen objects
 % close all;
 % clearvars;
 
-load('anfis_data.mat');
+load('anfis_data_3.mat');
 
 % Here we call some default settings for setting up Psychtoolbox
 PsychDefaultSetup(2);
@@ -49,7 +49,6 @@ Priority(topPriorityLevel);
 circXpos = xCenter; 
 circYpos = yCenter;
 
-
 % draw circle at origin
 my_circle(window, colCircle, circXpos, yCenter, 20);
 vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
@@ -89,13 +88,12 @@ while ~KbCheck
         sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical);
         sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal);
         
-        predicted_vertical = evalfis([sampled_vertical_mean],fis_vertical)
-        predicted_horizontal = evalfis([sampled_horizontal_mean],fis_horizontal)
+        predicted_vertical = evalfis([sampled_vertical_mean sampled_horizontal_mean],fis_vertical)
+        predicted_horizontal = evalfis([sampled_vertical_mean sampled_horizontal_mean],fis_horizontal)
        
         new_ball_vertical = predicted_vertical;
         new_ball_horizontal = predicted_horizontal;
         
-       
         if new_ball_vertical > screenYpixels
             new_ball_vertical = screenYpixels;
         elseif new_ball_vertical < 0

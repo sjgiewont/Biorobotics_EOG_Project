@@ -117,10 +117,9 @@ evalfis([vertcial_eye],fis_vertical)
 
 % plot all inputs against anfis
 figure(6)
-plot(horizontal_training(:,2),horizontal_training(:,3),horizontal_training(:,2),evalfis(horizontal_training(:,2),fis_horizontal))
+plot(horizontal_training(:,2),horizontal_training(:,3),horizontal_training(:,2),evalfis([horizontal_training(:,1) horizontal_training(:,2)],fis_horizontal))
 
 figure(7)
-plot(vertical_training(:,1),vertical_training(:,3),vertical_training(:,1),evalfis(vertical_training(:,1),fis_vertical))
+plot(vertical_training(:,1), vertical_training(:,3), vertical_training(:,1), evalfis([vertical_training(:,1) vertical_training(:,2)],fis_vertical))
 
-save('anfis_data_2.mat', 'fis_horizontal', 'fis_vertical');
-
+save('anfis_data_3.mat', 'fis_horizontal', 'fis_vertical');
