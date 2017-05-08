@@ -104,26 +104,13 @@ horz_train_x = horizontal_training_total(:,1);
 horz_train_y = horizontal_training_total(:,2);
 horz_train_z = horizontal_training_total(:,3);
 
-% run anfis
-trnOpt = [20, 0, 0.1, 0.9, 1.1];
-[fis_horizontal,trainError_horizontal] = anfis(horizontal_training_total, 10, trnOpt)
-[fis_vertical,trainError_vertical] = anfis(vertical_training_total, 10, trnOpt)
 
-% get min anfis error
-fisRMSE_horizontal = min(trainError_horizontal)
-fisRMSE_vertical = min(trainError_vertical)
+vert_train_x = vertical_training_total(:,1);
+vert_train_y = vertical_training_total(:,2);
+vert_train_z = vertical_training_total(:,3);
 
-% test anfis at a specific value
-horizontal_eye = 0;
-vertcial_eye = 0;
-evalfis([horizontal_eye],fis_horizontal)
-evalfis([vertcial_eye],fis_vertical)
+[fitresult_horizontal, gof_horizontal] = createFit(horz_train_x, horz_train_y, horz_train_z)
+[fitresult_vertical, gof_vertical] = createFit(vert_train_x, vert_train_y, vert_train_z)
 
-% plot all inputs against anfis
-figure(6)
-plot(horizontal_training(:,2),horizontal_training(:,3),horizontal_training(:,2),evalfis([horizontal_training(:,1) horizontal_training(:,2)],fis_horizontal))
+save('regression_fit_1.mat', 'fitresult_horizontal', 'fitresult_vertical');
 
-figure(7)
-plot(vertical_training(:,1), vertical_training(:,3), vertical_training(:,1), evalfis([vertical_training(:,1) vertical_training(:,2)],fis_vertical))
-
-save('anfis_data_3.mat', 'fis_horizontal', 'fis_vertical');
