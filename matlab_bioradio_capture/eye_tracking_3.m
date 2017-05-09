@@ -88,9 +88,15 @@ while ~KbCheck
         sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical);
         sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal);
         
-        predicted_vertical = feval(fitresult_vertical, [sampled_vertical_mean sampled_horizontal_mean]);
-        predicted_horizontal = feval(fitresult_horizontal, [sampled_vertical_mean sampled_horizontal_mean])
+        val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
+        cP = cell(val);
         
+        predicted_vertical = cP{1};
+        predicted_horizontal = cP{2};
+        
+%         predicted_vertical = feval(fitresult_vertical, [sampled_vertical_mean sampled_horizontal_mean]);
+%         predicted_horizontal = feval(fitresult_horizontal, [sampled_vertical_mean sampled_horizontal_mean])
+%         
         new_ball_vertical = predicted_vertical;
         new_ball_horizontal = predicted_horizontal;
         
