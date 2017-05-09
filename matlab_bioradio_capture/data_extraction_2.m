@@ -11,8 +11,13 @@ for file_num = 1:eog_file_total_num
 
     curr_filename = strcat(eog_mat_file, int2str(file_num), '.mat');
     
-    load(curr_filename)
-
+    try
+        load(curr_filename)
+    catch
+         disp('An error occurred while opening .mat file, skipping now.');
+         continue
+    end
+        
     vertical_channel = logged_data_total(:,3);
     horizontal_channel = logged_data_total(:,4);
 
