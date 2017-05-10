@@ -60,7 +60,10 @@ calibration_check = 0;
 running_horizontal_mean = [];
 running_vertical_mean = [];
 
-while calibration_check < 10        
+
+
+while calibration_check < 10   
+    rawWindow = transpose(rawWindow);
     sampled_vertical = rawWindow(:,1);
     sampled_horizontal = rawWindow(:,2);
 
@@ -82,9 +85,18 @@ colCircle = [1 0 0];
 first_flag = 0;
 
 % Loop the animation until a key is pressed
-while ~KbCheck            
+while ~KbCheck       
+    
+%         start_pt = 1;
+%         end_pt = 96;
+    
         sampled_vertical = rawWindow(:,1);
         sampled_horizontal = rawWindow(:,2);
+%         for i=1:99
+        
+%         sampled_vertical = sampled_vertical(start_pt:end_pt);
+%         start_pt = end_pt + 1
+%         end_pt = end_pt + 95
         
         sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical);
         sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal);
@@ -103,14 +115,14 @@ while ~KbCheck
 %         predicted_vertical = feval(fitresult_vertical, [sampled_vertical_mean sampled_horizontal_mean]);
 %         predicted_horizontal = feval(fitresult_horizontal, [sampled_vertical_mean sampled_horizontal_mean])
 %         
-        new_ball_vertical = predicted_vertical - 400;
+        new_ball_vertical = predicted_vertical ;
         new_ball_horizontal = predicted_horizontal;
 %         new_ball_horizontal = ((abs(new_ball_horizontal - predicted_horizontal_first)) * (new_ball_horizontal - predicted_horizontal_first))
 
 %         new_ball_horizontal = (abs(new_ball_horizontal - predicted_horizontal_first))
 %         scale = sigmf(new_ball_horizontal, [0.5 1.5]) + 1
         
-        new_ball_horizontal = 2*(new_ball_horizontal - xCenter) +  new_ball_horizontal + 950
+%         new_ball_horizontal = 2*(new_ball_horizontal - xCenter) +  new_ball_horizontal + 950
 %         new_ball_horizontal = new_ball_horizontal + 100
         
 %         new_ball_horizontal = predicted_horizontal + 500;

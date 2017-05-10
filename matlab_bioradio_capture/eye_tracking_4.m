@@ -60,9 +60,12 @@ calibration_check = 0;
 running_horizontal_mean = [];
 running_vertical_mean = [];
 
-while calibration_check < 10        
-    sampled_vertical = rawWindow(:,1);
-    sampled_horizontal = rawWindow(:,2);
+
+
+while calibration_check < 5   
+    rawWindwTranspose = transpose(rawWindow);
+    sampled_vertical = rawWindwTranspose(:,2);
+    sampled_horizontal = rawWindwTranspose(:,1);
 
     sampled_vertical_mean = mean(sampled_vertical);
     sampled_horizontal_mean = mean(sampled_horizontal);
@@ -70,8 +73,9 @@ while calibration_check < 10
     running_vertical_mean = [running_vertical_mean, sampled_vertical_mean];
     running_horizontal_mean = [running_horizontal_mean, sampled_horizontal_mean];
     
+    pause(1)
+    
     calibration_check = calibration_check + 1;
-
 end
 
 vertical_base_meas = mean(running_vertical_mean);
@@ -82,12 +86,21 @@ colCircle = [1 0 0];
 first_flag = 0;
 
 % Loop the animation until a key is pressed
-while ~KbCheck            
-        sampled_vertical = rawWindow(:,1);
-        sampled_horizontal = rawWindow(:,2);
+while ~KbCheck       
+    
+%         start_pt = 1;
+%         end_pt = 96;
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
+%         for i=1:99
         
-        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical);
-        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal);
+%         sampled_vertical = sampled_vertical(start_pt:end_pt);
+%         start_pt = end_pt + 1
+%         end_pt = end_pt + 95
+        
+        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
+        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
         
         val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
         cP = cell(val);
@@ -95,22 +108,22 @@ while ~KbCheck
         predicted_vertical = cP{1};
         predicted_horizontal = cP{2};
         
-        if first_flag == 0
-            predicted_horizontal_first = predicted_horizontal;
-            first_flag = 1;
-        end
+%         if first_flag == 0
+%             predicted_horizontal_first = predicted_horizontal;
+%             first_flag = 1;
+%         end
         
 %         predicted_vertical = feval(fitresult_vertical, [sampled_vertical_mean sampled_horizontal_mean]);
 %         predicted_horizontal = feval(fitresult_horizontal, [sampled_vertical_mean sampled_horizontal_mean])
 %         
-        new_ball_vertical = predicted_vertical - 400;
-        new_ball_horizontal = predicted_horizontal;
+        new_ball_vertical = predicted_vertical - 525;
+        new_ball_horizontal = predicted_horizontal + 400;
 %         new_ball_horizontal = ((abs(new_ball_horizontal - predicted_horizontal_first)) * (new_ball_horizontal - predicted_horizontal_first))
 
 %         new_ball_horizontal = (abs(new_ball_horizontal - predicted_horizontal_first))
 %         scale = sigmf(new_ball_horizontal, [0.5 1.5]) + 1
         
-        new_ball_horizontal = 2*(new_ball_horizontal - xCenter) +  new_ball_horizontal + 950
+%         new_ball_horizontal = 2*(new_ball_horizontal - xCenter) +  new_ball_horizontal + 950
 %         new_ball_horizontal = new_ball_horizontal + 100
         
 %         new_ball_horizontal = predicted_horizontal + 500;
