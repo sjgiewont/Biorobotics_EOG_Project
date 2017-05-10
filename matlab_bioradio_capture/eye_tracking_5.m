@@ -93,12 +93,12 @@ while ~KbCheck
         rawWindwTranspose = transpose(rawWindow);
         sampled_vertical_raw = rawWindwTranspose(:,2);
         sampled_horizontal_raw = rawWindwTranspose(:,1);
-        for i=1:3
+        for i=1:2
         
             sampled_vertical = sampled_vertical_raw(start_pt:end_pt);
             sampled_horizontal = sampled_horizontal_raw(start_pt:end_pt);
             start_pt = end_pt + 1
-            end_pt = end_pt + 240
+            end_pt = end_pt + 480
 
             sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
             sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
