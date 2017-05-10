@@ -2,11 +2,11 @@ clear;
 close all;
 
 eog_mat_file = 'charlie_eog_';
-eog_file_total_num = 24;
+eog_file_total_num = 35;
 
 all_training_data = [];
 
-for file_num = 11:eog_file_total_num
+for file_num = 25:eog_file_total_num
 
     curr_filename = strcat(eog_mat_file, int2str(file_num), '.mat');
     
@@ -39,8 +39,12 @@ for file_num = 11:eog_file_total_num
         scaled_window = [sampled_window(:,1), sampled_window(:,2), scaled_window_y, scaled_window_x];
         sampled_mean = [sampled_mean; mean(scaled_window)];
     end
-     
-    all_training_data = [all_training_data; sampled_mean(:,3), sampled_mean(:,4), sampled_mean(:,1), sampled_mean(:,2)];
+    
+    if any(sampled_mean(:,3) < -1)
+        continue
+    end
+    
+    all_training_data = [all_training_data; downsample(sampled_mean(:,3), 5), downsample(sampled_mean(:,4), 5), downsample(sampled_mean(:,1), 5), downsample(sampled_mean(:,2), 5)];
 
 end
 
@@ -52,6 +56,9 @@ all_training_y = all_training_data(:,4);
 
 all_training_input = all_training_data(:,1:2);
 all_training_output = all_training_data(:,3:4);
+
+validation_input = all_training_data(1:1092, 1:2);
+validation_output = all_training_data(1:1092, 3:4);
 
 save('all_data_extracted.mat', 'all_training_data');
 
