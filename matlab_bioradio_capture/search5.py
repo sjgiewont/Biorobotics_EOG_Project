@@ -6,7 +6,7 @@ def search(x, y):
     from myAnfis import anfis
     import numpy
     
-    with open('fuzzy_log_20.pkl', 'rb') as f:
+    with open('fuzzy_log_15.pkl', 'rb') as f:
         anf = pickle.load(f)
         
     var = numpy.array([[x, y]])

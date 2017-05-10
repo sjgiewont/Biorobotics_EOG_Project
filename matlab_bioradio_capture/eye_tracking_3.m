@@ -79,6 +79,7 @@ horizontal_base_meas = mean(running_horizontal_mean);
 
 % color of circle red
 colCircle = [1 0 0]; 
+first_flag = 0;
 
 % Loop the animation until a key is pressed
 while ~KbCheck        
@@ -94,11 +95,25 @@ while ~KbCheck
         predicted_vertical = cP{1};
         predicted_horizontal = cP{2};
         
+        if first_flag == 0
+            predicted_horizontal_first = predicted_horizontal;
+            first_flag = 1;
+        end
+        
 %         predicted_vertical = feval(fitresult_vertical, [sampled_vertical_mean sampled_horizontal_mean]);
 %         predicted_horizontal = feval(fitresult_horizontal, [sampled_vertical_mean sampled_horizontal_mean])
 %         
-        new_ball_vertical = predicted_vertical;
+        new_ball_vertical = predicted_vertical - 400;
         new_ball_horizontal = predicted_horizontal;
+%         new_ball_horizontal = ((abs(new_ball_horizontal - predicted_horizontal_first)) * (new_ball_horizontal - predicted_horizontal_first))
+
+%         new_ball_horizontal = (abs(new_ball_horizontal - predicted_horizontal_first))
+%         scale = sigmf(new_ball_horizontal, [0.5 1.5]) + 1
+        
+        new_ball_horizontal = 2*(new_ball_horizontal - xCenter) +  new_ball_horizontal + 950
+%         new_ball_horizontal = new_ball_horizontal + 100
+        
+%         new_ball_horizontal = predicted_horizontal + 500;
         
         if new_ball_vertical > screenYpixels
             new_ball_vertical = screenYpixels;
