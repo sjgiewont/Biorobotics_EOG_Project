@@ -60,295 +60,329 @@ calibration_check = 0;
 running_horizontal_mean = [];
 running_vertical_mean = [];
 
+try
 
-while calibration_check < 5   
-    rawWindwTranspose = transpose(rawWindow);
-    sampled_vertical = rawWindwTranspose(:,2);
-    sampled_horizontal = rawWindwTranspose(:,1);
+    while calibration_check < 5   
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
 
-    sampled_vertical_mean = mean(sampled_vertical);
-    sampled_horizontal_mean = mean(sampled_horizontal);
+        sampled_vertical_mean = mean(sampled_vertical);
+        sampled_horizontal_mean = mean(sampled_horizontal);
+
+        running_vertical_mean = [running_vertical_mean, sampled_vertical_mean];
+        running_horizontal_mean = [running_horizontal_mean, sampled_horizontal_mean];
+
+        pause(1)
+
+        calibration_check = calibration_check + 1;
+    end
+
+    vertical_base_meas = mean(running_vertical_mean);
+    horizontal_base_meas = mean(running_horizontal_mean);
+
+    % evaluate the first base measurement
+%     val = py.search5.search(vertical_base_meas, horizontal_base_meas)
+%     cP = cell(val);
+%     predicted_vertical_first = cP{1};
+%     predicted_horizontal_first = cP{2};
+
+    % color of circle red
+    colCircle = [0 0 1]; 
+    colValidationCricle = [1 0 0]; 
+    frame_step_size = 2;
+    first_flag = 0;
+    total_validation_data = [];
+
+
+    % Move circle to the right until hits end of screen
+    while (circXpos < screenXpixels) & ~KbCheck
+        circXpos = circXpos + frame_step_size;
+        my_circle(window, colValidationCricle, circXpos, circYpos, 20);
+
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
+
+        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
+        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
+
+        val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
+        cP = cell(val);
+
+        predicted_vertical = cP{1};
+        predicted_horizontal = cP{2};
+        
+        if first_flag == 0
+            predicted_vertical_first = predicted_vertical;
+            predicted_horizontal_first = predicted_horizontal;
+            first_flag = 1;
+        end
+
+        new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
+        new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
+        
+%         new_ball_vertical = predicted_vertical;
+%         new_ball_horizontal = predicted_horizontal;
+
+        if new_ball_vertical > screenYpixels
+            new_ball_vertical = screenYpixels;
+        elseif new_ball_vertical < 0
+            new_ball_vertical = 0;
+        end
+
+        if new_ball_horizontal > screenXpixels
+            new_ball_horizontal = screenXpixels;
+        elseif new_ball_horizontal < 0
+            new_ball_horizontal = 0;
+        end        
+
+        my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
+        % Flip to the screen
+        vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+
+        curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
+        total_validation_data = [total_validation_data; curr_validation_data]; 
+    end
+
+
+    % Move circle to the right until hits end of screen
+    while (circXpos > 0) & ~KbCheck
+        circXpos = circXpos - frame_step_size;
+        my_circle(window, colValidationCricle, circXpos, circYpos, 20);
+
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
+
+        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
+        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
+
+        val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
+        cP = cell(val);
+
+        predicted_vertical = cP{1};
+        predicted_horizontal = cP{2};
+
+        new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
+        new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
+
+%         new_ball_vertical = predicted_vertical;
+%         new_ball_horizontal = predicted_horizontal;
+
+        if new_ball_vertical > screenYpixels
+            new_ball_vertical = screenYpixels;
+        elseif new_ball_vertical < 0
+            new_ball_vertical = 0;
+        end
+
+        if new_ball_horizontal > screenXpixels
+            new_ball_horizontal = screenXpixels;
+        elseif new_ball_horizontal < 0
+            new_ball_horizontal = 0;
+        end        
+
+        my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
+        % Flip to the screen
+        vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+
+        curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
+        total_validation_data = [total_validation_data; curr_validation_data]; 
+    end
+
+
+    % Move circle to the right until hits end of screen
+    while (circXpos < xCenter) & ~KbCheck
+        circXpos = circXpos + frame_step_size;
+        my_circle(window, colValidationCricle, circXpos, circYpos, 20);
+
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
+
+        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
+        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
+
+        val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
+        cP = cell(val);
+
+        predicted_vertical = cP{1};
+        predicted_horizontal = cP{2};
+
+        new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
+        new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
+
+%         new_ball_vertical = predicted_vertical;
+%         new_ball_horizontal = predicted_horizontal;
+
+        if new_ball_vertical > screenYpixels
+            new_ball_vertical = screenYpixels;
+        elseif new_ball_vertical < 0
+            new_ball_vertical = 0;
+        end
+
+        if new_ball_horizontal > screenXpixels
+            new_ball_horizontal = screenXpixels;
+        elseif new_ball_horizontal < 0
+            new_ball_horizontal = 0;
+        end        
+
+        my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
+        % Flip to the screen
+        vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+
+        curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
+        total_validation_data = [total_validation_data; curr_validation_data]; 
+    end
+
+
+    % Move circle to the right until hits end of screen
+    while (circYpos > 0) & ~KbCheck
+        circYpos = circYpos - frame_step_size;
+        my_circle(window, colValidationCricle, circXpos, circYpos, 20);
+
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
+
+        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
+        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
+
+        val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
+        cP = cell(val);
+
+        predicted_vertical = cP{1};
+        predicted_horizontal = cP{2};
+
+        new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
+        new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
+
+%         new_ball_vertical = predicted_vertical;
+%         new_ball_horizontal = predicted_horizontal;
+
+        if new_ball_vertical > screenYpixels
+            new_ball_vertical = screenYpixels;
+        elseif new_ball_vertical < 0
+            new_ball_vertical = 0;
+        end
+
+        if new_ball_horizontal > screenXpixels
+            new_ball_horizontal = screenXpixels;
+        elseif new_ball_horizontal < 0
+            new_ball_horizontal = 0;
+        end        
+
+        my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
+        % Flip to the screen
+        vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+
+        curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
+        total_validation_data = [total_validation_data; curr_validation_data]; 
+    end
+
+
+    % Move circle to the right until hits end of screen
+    while (circYpos < screenYpixels) & ~KbCheck
+        circYpos = circYpos + frame_step_size;
+        my_circle(window, colValidationCricle, circXpos, circYpos, 20);
+
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
+
+        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
+        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
+
+        val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
+        cP = cell(val);
+
+        predicted_vertical = cP{1};
+        predicted_horizontal = cP{2};
+
+        new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
+        new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
+
+%         new_ball_vertical = predicted_vertical;
+%         new_ball_horizontal = predicted_horizontal;
+
+        if new_ball_vertical > screenYpixels
+            new_ball_vertical = screenYpixels;
+        elseif new_ball_vertical < 0
+            new_ball_vertical = 0;
+        end
+
+        if new_ball_horizontal > screenXpixels
+            new_ball_horizontal = screenXpixels;
+        elseif new_ball_horizontal < 0
+            new_ball_horizontal = 0;
+        end        
+
+        my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
+        % Flip to the screen
+        vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+
+        curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
+        total_validation_data = [total_validation_data; curr_validation_data]; 
+    end
+
+
+    % Move circle to the right until hits end of screen
+    while (circYpos > yCenter) & ~KbCheck
+        circYpos = circYpos - frame_step_size;
+        my_circle(window, colValidationCricle, circXpos, circYpos, 20);
+
+        rawWindwTranspose = transpose(rawWindow);
+        sampled_vertical = rawWindwTranspose(:,2);
+        sampled_horizontal = rawWindwTranspose(:,1);
+
+        sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
+        sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
+
+        val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
+        cP = cell(val);
+
+        predicted_vertical = cP{1};
+        predicted_horizontal = cP{2};
+
+        new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
+        new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
+
+%         new_ball_vertical = predicted_vertical;
+%         new_ball_horizontal = predicted_horizontal;
+
+        if new_ball_vertical > screenYpixels
+            new_ball_vertical = screenYpixels;
+        elseif new_ball_vertical < 0
+            new_ball_vertical = 0;
+        end
+
+        if new_ball_horizontal > screenXpixels
+            new_ball_horizontal = screenXpixels;
+        elseif new_ball_horizontal < 0
+            new_ball_horizontal = 0;
+        end        
+
+        my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
+        % Flip to the screen
+        vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+
+        curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
+        total_validation_data = [total_validation_data; curr_validation_data]; 
+    end
+
+    save('validation_data_4.mat', 'total_validation_data');
     
-    running_vertical_mean = [running_vertical_mean, sampled_vertical_mean];
-    running_horizontal_mean = [running_horizontal_mean, sampled_horizontal_mean];
+    WaitSecs(1);
+    isCollecting = 0;
+
+    % Clear the screen
+    sca;
     
-    pause(1)
-    
-    calibration_check = calibration_check + 1;
+catch
+    WaitSecs(1);
+    isCollecting = 0;
+
+    % Clear the screen
+    sca;
 end
-
-vertical_base_meas = mean(running_vertical_mean);
-horizontal_base_meas = mean(running_horizontal_mean);
-
-% evaluate the first base measurement
-val = py.search5.search(vertical_base_meas, horizontal_base_meas)
-cP = cell(val);
-predicted_vertical_first = cP{1};
-predicted_horizontal_first = cP{2};
-
-% color of circle red
-colCircle = [0 0 1]; 
-colValidationCricle = [1 0 0]; 
-frame_step_size = 1;
-% first_flag = 0;
-total_validation_data = [];
-  
-
-% Move circle to the right until hits end of screen
-while (circXpos < screenXpixels) & ~KbCheck
-    circXpos = circXpos + frame_step_size;
-    my_validation_circle(window, colValidationCricle, circXpos, circYpos, 20);
-
-    rawWindwTranspose = transpose(rawWindow);
-    sampled_vertical = rawWindwTranspose(:,2);
-    sampled_horizontal = rawWindwTranspose(:,1);
-
-    sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
-    sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
-
-    val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
-    cP = cell(val);
-
-    predicted_vertical = cP{1};
-    predicted_horizontal = cP{2};
-
-    new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
-    new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
-
-    if new_ball_vertical > screenYpixels
-        new_ball_vertical = screenYpixels;
-    elseif new_ball_vertical < 0
-        new_ball_vertical = 0;
-    end
-
-    if new_ball_horizontal > screenXpixels
-        new_ball_horizontal = screenXpixels;
-    elseif new_ball_horizontal < 0
-        new_ball_horizontal = 0;
-    end        
-
-    my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
-    % Flip to the screen
-    vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
-
-    curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
-    total_validation_data = [total_validation_data; curr_validation_data]; 
-end
-
-
-% Move circle to the right until hits end of screen
-while (circXpos > 0) & ~KbCheck
-    circXpos = circXpos - frame_step_size;
-    my_validation_circle(window, colValidationCricle, circXpos, circYpos, 20);
-
-    rawWindwTranspose = transpose(rawWindow);
-    sampled_vertical = rawWindwTranspose(:,2);
-    sampled_horizontal = rawWindwTranspose(:,1);
-
-    sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
-    sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
-
-    val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
-    cP = cell(val);
-
-    predicted_vertical = cP{1};
-    predicted_horizontal = cP{2};
-
-    new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
-    new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
-
-    if new_ball_vertical > screenYpixels
-        new_ball_vertical = screenYpixels;
-    elseif new_ball_vertical < 0
-        new_ball_vertical = 0;
-    end
-
-    if new_ball_horizontal > screenXpixels
-        new_ball_horizontal = screenXpixels;
-    elseif new_ball_horizontal < 0
-        new_ball_horizontal = 0;
-    end        
-
-    my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
-    % Flip to the screen
-    vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
-
-    curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
-    total_validation_data = [total_validation_data; curr_validation_data]; 
-end
-
-
-% Move circle to the right until hits end of screen
-while (circXpos < xCenter) & ~KbCheck
-    circXpos = circXpos + frame_step_size;
-    my_validation_circle(window, colValidationCricle, circXpos, circYpos, 20);
-
-    rawWindwTranspose = transpose(rawWindow);
-    sampled_vertical = rawWindwTranspose(:,2);
-    sampled_horizontal = rawWindwTranspose(:,1);
-
-    sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
-    sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
-
-    val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
-    cP = cell(val);
-
-    predicted_vertical = cP{1};
-    predicted_horizontal = cP{2};
-
-    new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
-    new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
-
-    if new_ball_vertical > screenYpixels
-        new_ball_vertical = screenYpixels;
-    elseif new_ball_vertical < 0
-        new_ball_vertical = 0;
-    end
-
-    if new_ball_horizontal > screenXpixels
-        new_ball_horizontal = screenXpixels;
-    elseif new_ball_horizontal < 0
-        new_ball_horizontal = 0;
-    end        
-
-    my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
-    % Flip to the screen
-    vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
-
-    curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
-    total_validation_data = [total_validation_data; curr_validation_data]; 
-end
-
-
-% Move circle to the right until hits end of screen
-while (circYpos > 0) & ~KbCheck
-    circYpos = circYpos - frame_step_size;
-    my_validation_circle(window, colValidationCricle, circXpos, circYpos, 20);
-
-    rawWindwTranspose = transpose(rawWindow);
-    sampled_vertical = rawWindwTranspose(:,2);
-    sampled_horizontal = rawWindwTranspose(:,1);
-
-    sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
-    sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
-
-    val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
-    cP = cell(val);
-
-    predicted_vertical = cP{1};
-    predicted_horizontal = cP{2};
-
-    new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
-    new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
-
-    if new_ball_vertical > screenYpixels
-        new_ball_vertical = screenYpixels;
-    elseif new_ball_vertical < 0
-        new_ball_vertical = 0;
-    end
-
-    if new_ball_horizontal > screenXpixels
-        new_ball_horizontal = screenXpixels;
-    elseif new_ball_horizontal < 0
-        new_ball_horizontal = 0;
-    end        
-
-    my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
-    % Flip to the screen
-    vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
-
-    curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
-    total_validation_data = [total_validation_data; curr_validation_data]; 
-end
-
-
-% Move circle to the right until hits end of screen
-while (circYpos < screenYpixels) & ~KbCheck
-    circYpos = circYpos + frame_step_size;
-    my_validation_circle(window, colValidationCricle, circXpos, circYpos, 20);
-
-    rawWindwTranspose = transpose(rawWindow);
-    sampled_vertical = rawWindwTranspose(:,2);
-    sampled_horizontal = rawWindwTranspose(:,1);
-
-    sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
-    sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
-
-    val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
-    cP = cell(val);
-
-    predicted_vertical = cP{1};
-    predicted_horizontal = cP{2};
-
-    new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
-    new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
-
-    if new_ball_vertical > screenYpixels
-        new_ball_vertical = screenYpixels;
-    elseif new_ball_vertical < 0
-        new_ball_vertical = 0;
-    end
-
-    if new_ball_horizontal > screenXpixels
-        new_ball_horizontal = screenXpixels;
-    elseif new_ball_horizontal < 0
-        new_ball_horizontal = 0;
-    end        
-
-    my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
-    % Flip to the screen
-    vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
-
-    curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
-    total_validation_data = [total_validation_data; curr_validation_data]; 
-end
-
-
-% Move circle to the right until hits end of screen
-while (circYpos > yCenter) & ~KbCheck
-    circYpos = circYpos - frame_step_size;
-    my_validation_circle(window, colValidationCricle, circXpos, circYpos, 20);
-
-    rawWindwTranspose = transpose(rawWindow);
-    sampled_vertical = rawWindwTranspose(:,2);
-    sampled_horizontal = rawWindwTranspose(:,1);
-
-    sampled_vertical_mean = vertical_base_meas - mean(sampled_vertical)
-    sampled_horizontal_mean = horizontal_base_meas - mean(sampled_horizontal)
-
-    val = py.search5.search(sampled_vertical_mean, sampled_horizontal_mean)
-    cP = cell(val);
-
-    predicted_vertical = cP{1};
-    predicted_horizontal = cP{2};
-
-    new_ball_vertical = predicted_vertical + (yCenter - predicted_vertical_first);
-    new_ball_horizontal = predicted_horizontal + (xCenter - predicted_horizontal_first);
-
-    if new_ball_vertical > screenYpixels
-        new_ball_vertical = screenYpixels;
-    elseif new_ball_vertical < 0
-        new_ball_vertical = 0;
-    end
-
-    if new_ball_horizontal > screenXpixels
-        new_ball_horizontal = screenXpixels;
-    elseif new_ball_horizontal < 0
-        new_ball_horizontal = 0;
-    end        
-
-    my_circle(window, colCircle, new_ball_horizontal, new_ball_vertical, 20);
-    % Flip to the screen
-    vbl  = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
-
-    curr_validation_data = [circXpos, circYpos, new_ball_horizontal, new_ball_vertical];
-    total_validation_data = [total_validation_data; curr_validation_data]; 
-end
-    
-WaitSecs(1);
-isCollecting = 0;
-
-% Clear the screen
-sca;
-
 
